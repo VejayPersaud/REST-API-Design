@@ -1,0 +1,71 @@
+
+openapi: 3.0.0
+info:
+  title: Movie Ticket Payment API
+  description: API service for processing payments for movie ticket purchases.
+  version: 1.0.0
+servers:
+  - url: 'https://api.movietickets.com/v1'
+paths:
+  /payments:
+    get:
+      summary: Retrieve payment information
+      parameters:
+        - in: query
+          name: transactionId
+          schema:
+            type: string
+          required: true
+          description: Unique transaction ID for the payment
+      responses:
+        '200':
+          description: Payment information retrieved successfully
+        '404':
+          description: Payment information not found
+    post:
+      summary: Process a new payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  format: double
+                currency:
+                  type: string
+                method:
+                  type: string
+                  description: Payment method 
+                cardInfo:
+                  type: object
+                  properties:
+                    cardNumber:
+                      type: string
+                    expirationDate:
+                      type: string
+                    cvv:
+                      type: string
+      responses:
+        '200':
+          description: Payment processed successfully
+        '400':
+          description: Invalid payment details provided
+    delete:
+      summary: Cancel a payment
+      parameters:
+        - in: query
+          name: transactionId
+          schema:
+            type: string
+          required: true
+          description: Unique transaction ID for the payment to cancel
+      responses:
+        '200':
+          description: Payment cancelled successfully
+        '404':
+          description: Payment information not found
+        '409':
+          description: Payment cannot be cancelled (already processed)
